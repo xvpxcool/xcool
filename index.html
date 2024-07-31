@@ -999,42 +999,51 @@ const students = {};
         }
     });
 
-    submitButton.addEventListener('click', function () {
-        const selectedActivity = activitySelect.value;
-        if (!selectedActivity) return;
+    submitButton.addEventListener('click', async function () {
+    const selectedActivity = activitySelect.value;
+    if (!selectedActivity) return;
 
-        // Adjusting for GMT+7 timezone
-        const now = new Date();
-        const gmt7Offset = 7 * 60; // GMT+7 offset in minutes
-        const localTime = new Date(now.getTime() + gmt7Offset * 60000);
-        const timestamp = localTime.toISOString().slice(0, 19).replace('T', ' ');
+    const attendanceData = {};
 
-        let csvContent = 'data:text/csv;charset=utf-8,';
-        csvContent += `Timestamp,${timestamp}\n`;
-        csvContent += `Activity,${selectedActivity}\n\n`;
-        csvContent += 'Student,Status\n';
+    students[selectedActivity].forEach(student => {
+        const status = document.querySelector(`input[name="attendance-${student}"]:checked`);
+        const statusValue = status ? status.value : 'Not Selected';
+        attendanceData[student] = statusValue;
+    });
 
-        students[selectedActivity].forEach(student => {
-            const status = document.querySelector(`input[name="attendance-${student}"]:checked`);
-            const statusValue = status ? status.value : 'Not Selected';
-            csvContent += `${student},${statusValue}\n`;
+    const postData = {
+        teacher: teacherSelect.value,
+        activity: selectedActivity,
+        timestamp: new Date().toISOString(),
+        data: attendanceData
+    };
+
+    try {
+        const response = await fetch('https://script.google.com/macros/s/AKfycbzWNrV0Y4hWx_11KxrEyaSJOnYP1gJpTKQW_G9C2keP44EeWnTw2BE8R3m4vqnEHmTa/exec', { // Replace with your Google Apps Script URL
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(postData)
         });
 
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement('a');
-        link.setAttribute('href', encodedUri);
-        link.setAttribute('download', `attendance_${selectedActivity}_${timestamp.replace(/:/g, '-')}.csv`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        if (!response.ok) {
+            throw new Error('Failed to submit attendance');
+        }
 
-        // Clear selections
-        teacherSelect.value = '';
-        activitySelect.innerHTML = '<option value="">--Please choose an option--</option>';
-        activitySection.style.display = 'none';
-        studentSection.style.display = 'none';
-        activityName.textContent = '';
-        studentList.innerHTML = '';
+        alert('Attendance submitted successfully!');
+    } catch (error) {
+        console.error(error);
+        alert('Error submitting attendance');
+    }
+
+    // Clear selections
+    teacherSelect.value = '';
+    activitySelect.innerHTML = '<option value="">--Please choose an option--</option>';
+    activitySection.style.display = 'none';
+    studentSection.style.display = 'none';
+    activityName.textContent = '';
+    studentList.innerHTML = '';
 
         // Show popup message
         alert("PRESENSI TERSIMPAN!");
