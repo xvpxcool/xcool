@@ -1,3 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Presensi Kehadiran Ekskul</title>
+    <style>
+        body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #333;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Ensures full height */
+}
+
+.container {
+    background-color: #444;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    width: 80%; /* Adjust width as needed */
+    max-width: 600px; /* Example maximum width */
+}
+
+h2 {
+    color: #fff;
+}
+
+label {
+    font-weight: bold;
+    color: #fff;
+}
+
+select, button {
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    background-color: #555;
+    color: #fff;
+    margin-top: 5px;
+}
+
+select:focus, button:focus {
+    outline: none;
+}
+
+#activity-section, #student-section {
+    margin-top: 20px;
+}
+
+#activity-name {
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+#student-list {
+    list-style-type: none;
+    padding: 0;
+    max-height: 300px; /* Set a maximum height for scrolling */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+#student-list li {
+    margin: 10px 0;
+    white-space: nowrap; /* Prevents names from wrapping */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Displays ellipsis (...) for overflowed text */
+}
+
+.checklist {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.checklist label {
+    margin-left: 5px;
+    color: #fff;
+}
+
+#submit-button {
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+}
+
+#submit-button:hover {
+    background-color: #0056b3;
+}
+
+#check-all-present {
+    background-color: #28a745;
+    color: #fff;
+    cursor: pointer;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    margin-left: 10px;
+}
+
+#check-all-present:hover {
+    background-color: #218838;
+}
+
+.my-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .my-button:hover {
+            background-color: #0056b3;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Aplikasi Presensi Kehadiran Ekskul</h2>
+        <div>
+            <label for="teacher-select">Teacher:</label>
+            <select id="teacher-select">
+                <option value="">--Please choose an option--</option>
+            </select>
+        </div>
+        <div id="activity-section" style="display: none;">
+            <label for="activity-select">Activity:</label>
+            <select id="activity-select">
+                <option value="">--Please choose an option--</option>
+            </select>
+        </div>
+        <div id="student-section" style="display: none;">
+            <h3 id="activity-name"></h3>
+            <ul id="student-list"></ul>
+            <button id="check-all-present">Check All Present</button>
+        </div>
+        <button id="submit-button">Submit</button>
+        <a href="https://forms.gle/kZm25KT31hzxkhgR6" class="my-button" target="_blank">Open Google Form</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+    const teacherSelect = document.getElementById('teacher-select');
+    const activitySelect = document.getElementById('activity-select');
+    const activitySection = document.getElementById('activity-section');
+    const studentSection = document.getElementById('student-section');
+    const activityName = document.getElementById('activity-name');
+    const studentList = document.getElementById('student-list');
+    const submitButton = document.getElementById('submit-button');
+    const checkAllPresentButton = document.getElementById('check-all-present');
+
+    const data = `
 BU RIA & BU EVA\tOSN MATEMATIKA
 BU NELLY\tOSN BIOLOGI
 BU AYU\tOSN KIMIA (Senin)
@@ -743,3 +911,165 @@ XII 7 - STEVEN\tFUTSAL
 XII 7 - THALIA ALEXA EVANGELINE\tTATA RIAS
 XII 7 - VERONICA ADELINA W\tBULUTANGKIS
 XII 7 - VINSENTIUS ROBET DANUARTA\tPRAMUKA MINAT
+`.trim().split('\n');
+
+    const teachers = {
+        "BU RIA & BU EVA":[],
+"BU NELLY":[],
+"BU AYU":[],
+"BU ENDANG & PAK TEGUH":[],
+"PAK LAMIRAN":[],
+"PAK DONI & PAK IVAN":[],
+"BU IMEL & BU OLIV":[],
+"BU GESTA":[],
+"BU ARY & BU PENI":[],
+"MR.KRIS":[],
+"BU MAUREN & BU DINDA":[],
+"PAK ADDY":[],
+"BU DEWI, BU DEVI, & PAK UUT":[],
+"PAK NICO, BU OCA, PAK JACK":[],
+"PAK FERDI":[],
+"PAK NICO":[],
+"PAK YO, PAK THADEUS, & PAK JACK":[],
+"PAK THEO":[],
+"PAK LUYA, PAK JHON, & BU TATA":[],
+"BU LINA":[],
+"BU DEWI ASTI & BU ROSA":[],
+"MS. CLARA & MS. WULAN":[],
+"BU SILDAM":[],
+"PAK THADEUS":[],
+"PAK ANDI & PAK BAMBANG":[],
+"BU WIDIT":[],
+"BU WIWID, BU SEPTI, & BU PUJI":[]
+};
+
+const students = {};
+
+    data.forEach(line => {
+        const [name, activity] = line.split('\t');
+        if (teachers.hasOwnProperty(name)) {
+            teachers[name].push(activity);
+        } else {
+            if (!students[activity]) {
+                students[activity] = [];
+            }
+            students[activity].push(name);
+        }
+    });
+
+    for (const teacher in teachers) {
+        const option = document.createElement('option');
+        option.value = teacher;
+        option.textContent = teacher;
+        teacherSelect.appendChild(option);
+    }
+
+    teacherSelect.addEventListener('change', function () {
+        const selectedTeacher = this.value;
+        if (selectedTeacher) {
+            activitySelect.innerHTML = '<option value="">--Please choose an option--</option>';
+
+            teachers[selectedTeacher].forEach(activity => {
+                const option = document.createElement('option');
+                option.value = activity;
+                option.textContent = activity;
+                activitySelect.appendChild(option);
+            });
+
+            activitySection.style.display = 'block';
+            studentSection.style.display = 'none';
+        } else {
+            activitySection.style.display = 'none';
+            studentSection.style.display = 'none';
+        }
+    });
+
+    activitySelect.addEventListener('change', function () {
+        const selectedActivity = this.value;
+        if (selectedActivity) {
+            activityName.textContent = selectedActivity;
+            studentList.innerHTML = '';
+
+            if (students[selectedActivity]) {
+                students[selectedActivity].forEach(student => {
+                    const li = document.createElement('li');
+                    li.textContent = student;
+
+                    const checklist = document.createElement('div');
+                    checklist.className = 'checklist';
+
+                    const statuses = ['Present', 'Ijin', 'Sakit', 'Alpha'];
+                    statuses.forEach(status => {
+                        const label = document.createElement('label');
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'radio';
+                        checkbox.name = `attendance-${student}`;
+                        checkbox.value = status;
+                        label.appendChild(checkbox);
+                        label.appendChild(document.createTextNode(status));
+                        checklist.appendChild(label);
+                    });
+
+                    li.appendChild(checklist);
+                    studentList.appendChild(li);
+                });
+            }
+
+            studentSection.style.display = 'block';
+        } else {
+            studentSection.style.display = 'none';
+        }
+    });
+
+    submitButton.addEventListener('click', function () {
+        const selectedActivity = activitySelect.value;
+        if (!selectedActivity) return;
+
+        // Adjusting for GMT+7 timezone
+        const now = new Date();
+        const gmt7Offset = 7 * 60; // GMT+7 offset in minutes
+        const localTime = new Date(now.getTime() + gmt7Offset * 60000);
+        const timestamp = localTime.toISOString().slice(0, 19).replace('T', ' ');
+
+        let csvContent = 'data:text/csv;charset=utf-8,';
+        csvContent += `Timestamp,${timestamp}\n`;
+        csvContent += `Activity,${selectedActivity}\n\n`;
+        csvContent += 'Student,Status\n';
+
+        students[selectedActivity].forEach(student => {
+            const status = document.querySelector(`input[name="attendance-${student}"]:checked`);
+            const statusValue = status ? status.value : 'Not Selected';
+            csvContent += `${student},${statusValue}\n`;
+        });
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement('a');
+        link.setAttribute('href', encodedUri);
+        link.setAttribute('download', `attendance_${selectedActivity}_${timestamp.replace(/:/g, '-')}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Clear selections
+        teacherSelect.value = '';
+        activitySelect.innerHTML = '<option value="">--Please choose an option--</option>';
+        activitySection.style.display = 'none';
+        studentSection.style.display = 'none';
+        activityName.textContent = '';
+        studentList.innerHTML = '';
+
+        // Show popup message
+        alert("PRESENSI TERSIMPAN!");
+    });
+
+    checkAllPresentButton.addEventListener('click', function () {
+        const studentCheckboxes = document.querySelectorAll('input[type="radio"][value="Present"]');
+        studentCheckboxes.forEach(checkbox => {
+            checkbox.checked = true;
+        });
+    });
+});
+
+    </script>
+</body>
+</html>
