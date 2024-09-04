@@ -1,174 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplikasi Presensi Kehadiran Ekskul</title>
-    <style>
-        body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #333;
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; /* Ensures full height */
-}
-
-.container {
-    background-color: #444;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    width: 80%; /* Adjust width as needed */
-    max-width: 600px; /* Example maximum width */
-}
-
-h2 {
-    color: #fff;
-}
-
-label {
-    font-weight: bold;
-    color: #fff;
-}
-
-select, button {
-    font-family: 'Arial', sans-serif;
-    font-size: 14px;
-    padding: 8px;
-    border: none;
-    border-radius: 4px;
-    background-color: #555;
-    color: #fff;
-    margin-top: 5px;
-}
-
-select:focus, button:focus {
-    outline: none;
-}
-
-#activity-section, #student-section {
-    margin-top: 20px;
-}
-
-#activity-name {
-    color: #fff;
-    margin-bottom: 10px;
-}
-
-#student-list {
-    list-style-type: none;
-    padding: 0;
-    max-height: 300px; /* Set a maximum height for scrolling */
-    overflow-y: auto; /* Enable vertical scrolling */
-}
-
-#student-list li {
-    margin: 10px 0;
-    white-space: nowrap; /* Prevents names from wrapping */
-    overflow: hidden;
-    text-overflow: ellipsis; /* Displays ellipsis (...) for overflowed text */
-}
-
-.checklist {
-    display: flex;
-    align-items: center;
-    margin-left: 10px;
-}
-
-.checklist label {
-    margin-left: 5px;
-    color: #fff;
-}
-
-#submit-button {
-    background-color: #007bff;
-    color: #fff;
-    cursor: pointer;
-    margin-top: 20px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-}
-
-#submit-button:hover {
-    background-color: #0056b3;
-}
-
-#check-all-present {
-    background-color: #28a745;
-    color: #fff;
-    cursor: pointer;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 4px;
-    margin-left: 10px;
-}
-
-#check-all-present:hover {
-    background-color: #218838;
-}
-
-.my-button {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 16px;
-            color: white;
-            background-color: #007bff;
-            border: none;
-            border-radius: 5px;
-            text-decoration: none;
-            text-align: center;
-        }
-
-        .my-button:hover {
-            background-color: #0056b3;
-        }
-        
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h2>Aplikasi Presensi Kehadiran Ekskul</h2>
-        <div>
-            <label for="teacher-select">Teacher:</label>
-            <select id="teacher-select">
-                <option value="">--Please choose an option--</option>
-            </select>
-        </div>
-        <div id="activity-section" style="display: none;">
-            <label for="activity-select">Activity:</label>
-            <select id="activity-select">
-                <option value="">--Please choose an option--</option>
-            </select>
-        </div>
-        <div id="student-section" style="display: none;">
-            <h3 id="activity-name"></h3>
-            <ul id="student-list"></ul>
-            <button id="check-all-present">Check All Present</button>
-        </div>
-        <button id="submit-button">Submit</button>
-        <a href="https://forms.gle/kZm25KT31hzxkhgR6" class="my-button" target="_blank">Open Google Form</a>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-    const teacherSelect = document.getElementById('teacher-select');
-    const activitySelect = document.getElementById('activity-select');
-    const activitySection = document.getElementById('activity-section');
-    const studentSection = document.getElementById('student-section');
-    const activityName = document.getElementById('activity-name');
-    const studentList = document.getElementById('student-list');
-    const submitButton = document.getElementById('submit-button');
-    const checkAllPresentButton = document.getElementById('check-all-present');
-
-    const data = `
 BU RIA & BU EVA\tOSN MATEMATIKA
 BU NELLY\tOSN BIOLOGI
-BU AYU\tOSN KIMIA
+BU AYU\tOSN KIMIA (Senin)
+BU AYU\tOSN KIMIA (Rabu)
 BU ENDANG & PAK TEGUH\tOSN EKONOMI
 PAK LAMIRAN\tOSN FISIKA
 PAK DONI & PAK IVAN\tMUSIK
@@ -237,9 +70,8 @@ X 2 - AUXY SHYNOMAURI ADDHARU\tBULUTANGKIS
 X 2 - BRYAN CHRISTOPHER SITUNGKIR\tKIR
 X 2 - CAYRINE AMELIA CANDRA\tPADUAN SUARA
 X 2 - CEROLLINE WIRA WIJAYA\tKIR
-X 2 - CHRISTIAN VINSENSIUS SINAGA\tOSN KIMIA
+X 2 - CHRISTIAN VINSENSIUS SINAGA\tOSN KIMIA (Senin)
 X 2 - CLARISSA MAVELLA JAUHARI\tKIR
-X 2 - DEMITRIAS KRISNARARYA BISUK SUSANTO\t---
 X 2 - DEOVANO GUNAWAN\tBULUTANGKIS
 X 2 - EDWARD CLINTON WENAS\tFOTOGRAFI
 X 2 - EVELYN WIDJAJANTO\tKIR
@@ -253,13 +85,13 @@ X 2 - KEVIN JONATHAN\tBASKET
 X 2 - LOUIS CHRISTIAN WANG\tVOLLY
 X 2 - MASCHERANO MIKHAEL WILLEAM\tBASKET
 X 2 - NATHANIA JENNIFER HARAHAP\tPRAMUKA MINAT
-X 2 - PUTU MESSI ALLVARO ATMADEWA\tOSN KIMIA
+X 2 - PUTU MESSI ALLVARO ATMADEWA\tOSN KIMIA (Senin)
 X 2 - RACHEL GRACE PALMA SIHOTANG\tMODERN DANCE
 X 2 - REYNARD ARYA DHARMA\tFOTOGRAFI
 X 2 - SHENIKA JUNIOR IVANKA\tKIR
 X 2 - SHEREN MONICA ANGELINE\tMODERN DANCE
 X 2 - STEFFI JOVIN SETIAWAN\tOSN EKONOMI
-X 2 - THANIA GERALDINE\tOSN KIMIA
+X 2 - THANIA GERALDINE\tOSN KIMIA (Senin)
 X 2 - VANNESS QIU\tOSN EKONOMI
 X 2 - WINARDO SUMIYKO\tVOLLY
 X 2 - ZERIKO KARUNA IDAMI\tBULUTANGKIS
@@ -289,8 +121,7 @@ X 3 - MELVIN TANDOKO\tMUSIK
 X 3 - MISAEL EVAN\tOSN MATEMATIKA
 X 3 - NATHANIA NICOLINE LO\tMODERN DANCE
 X 3 - PATRICIA JOSEFINA ROSANTY\tENGLISH CLUB
-X 3 - RACHEL KEONA CHEN\tOSN KIMIA
-X 3 - RICHIE PRATAMA WIJAYA\tBULUTANGKIS
+X 3 - RACHEL KEONA CHEN\tOSN KIMIA (Senin)
 X 3 - SAFIRA KUSUMA\tOSN MATEMATIKA
 X 3 - SEBASTIAN AXEL ABIMANYU\tPRAMUKA MINAT
 X 3 - SHERYL ESTER SIMBOLON\tMODERN DANCE
@@ -368,7 +199,7 @@ X 5 - TYAS AMADIS KURNIAWAN\tFOTOGRAFI
 X 5 - WAYAN ALDI NUGRAHA SETIAWAN\tBULUTANGKIS
 X 5 - WILLIAM SAPUTRA ALIYANTO\tVOLLY
 X 5 - YOANNE MARCELLINE WIJAYA\tMODERN DANCE
-X 6 - ANDREA CHRISTY LUKITO\tOSN KIMIA
+X 6 - ANDREA CHRISTY LUKITO\tOSN KIMIA (Senin)
 X 6 - ARYA AGRAMANIK DANUARTA\tVOLLY
 X 6 - BLAIR LOWELL\tFOTOGRAFI
 X 6 - CATHERINE GISELA SIHOTANG\tMODERN DANCE
@@ -380,7 +211,7 @@ X 6 - DAVIN CUNG TERASNO\tTAEKWONDO
 X 6 - EDBERT IVANDER HORIANTO\tFUTSAL
 X 6 - EILEEN CALVINA\tVOLLY
 X 6 - EMMANUEL BONNIE RAFAEL\tJURNALISTIK
-X 6 - FARAH AULIA\tOSN KIMIA
+X 6 - FARAH AULIA\tOSN KIMIA (Senin)
 X 6 - FERNANDO GAUTAMA FERRY\tBASKET
 X 6 - FLORENCE NATALIE GUNAWAN\tBULUTANGKIS
 X 6 - GEORGIUS TANJAYA\tBULUTANGKIS
@@ -427,7 +258,7 @@ X 7 - MARISYA GOTAMI KRISNIASYARI\tSENI RUPA (Selasa)
 X 7 - MARVEL KARUNA KWEE\tFOTOGRAFI
 X 7 - MICHELLE KANANI ROBERT\tOSN BIOLOGI
 X 7 - NATASHA CHRISTIE HARTONO\tOSN EKONOMI
-X 7 - NICHOLAS NIGAN\tOSN KIMIA
+X 7 - NICHOLAS NIGAN\tOSN KIMIA (Senin)
 X 7 - PRINCESSA LOVELY ANFI ZAKARIA\tMODERN DANCE
 X 7 - REGINA FORTUNATA LEONARD\tMODERN DANCE
 X 7 - SAMUEL NATHAN CAHYADI\tBASKET
@@ -439,7 +270,7 @@ X 7 - YEHUDA KRISTIAN SUSANTO\tFOTOGRAFI
 X 7 - YOHANES ANDRE KRISTIAN\tBULUTANGKIS
 X 7 - YOSUA GLORY P\tBASKET
 XI 1 - ACHMAD RIZKY\tMUSIK
-XI 1 - ARGLEN\tOSN KIMIA
+XI 1 - ARGLEN\tOSN KIMIA (Senin)
 XI 1 - BRYAN LUDY WIJAYA\tBULUTANGKIS
 XI 1 - CHRISLIEM EVANS\tKIR
 XI 1 - DARIEN ABNER WIJAYA\tKIR
@@ -507,8 +338,8 @@ XI 3 - CHERRY OLIVIA\tOSN EKONOMI
 XI 3 - CLAIRENCE TRISTANIA TANG\tBULUTANGKIS
 XI 3 - CLARABELLE BERNICE\tTATA RIAS
 XI 3 - DEVIN FEBRIANO\tOSN BIOLOGI
-XI 3 - EUFRACIA ANGELINE DEALOVA SILITONGA\tOSN KIMIA
-XI 3 - EVELY ALEXANDRA\tOSN KIMIA
+XI 3 - EUFRACIA ANGELINE DEALOVA SILITONGA\tOSN KIMIA (Senin)
+XI 3 - EVELY ALEXANDRA\tOSN KIMIA (Senin)
 XI 3 - FABIANUS REISYA ANDHIKA PRAJA\tOSN BIOLOGI
 XI 3 - FELICIA GABRIELLA NG\tBULUTANGKIS
 XI 3 - GABRIELLA MARANATHA LEKSONO\tTATA RIAS
@@ -523,7 +354,7 @@ XI 3 - NATASYA ALFRENDO\tPRAMUKA MINAT
 XI 3 - NAUFAL ALVARO NABIHA\tVOLLY
 XI 3 - OTTAWA KESUMA\tOSN BIOLOGI
 XI 3 - RANI HEMA PUSVITA\tTATA BOGA
-XI 3 - SAFIRA PUTRI SUTRAYOGA\tOSN KIMIA
+XI 3 - SAFIRA PUTRI SUTRAYOGA\tOSN KIMIA (Senin)
 XI 3 - SAMUEL CHRISTIAN NATHANAEL\tTAEKWONDO
 XI 3 - SHEREEN KURNIAWAN\tBULUTANGKIS
 XI 3 - STEFINCA HALIM\tBULUTANGKIS
@@ -543,15 +374,15 @@ XI 4 - EVELYN KEZIA\tMODERN DANCE
 XI 4 - FEBY NATALIE\tBULUTANGKIS
 XI 4 - FERNEDES LENZ KURNIAWAN\tMUSIK
 XI 4 - GENOVEVA LOVELY DENIELLA\tMODERN DANCE
-XI 4 - GISELLA OLIVIA ALVIS\tOSN KIMIA
+XI 4 - GISELLA OLIVIA ALVIS\tOSN KIMIA (Senin)
 XI 4 - JESSICA OKTAVIANA\tTATA RIAS
 XI 4 - JESSLYNE LUCCIANA TJOANDRA\tTATA RIAS
-XI 4 - JONATHAN ALEXANDER WIBISANA\tOSN KIMIA
+XI 4 - JONATHAN ALEXANDER WIBISANA\tOSN KIMIA (Senin)
 XI 4 - JUAN LAMVIET AHMAD\tFOTOGRAFI
 XI 4 - JUAN NOVERO\tBULUTANGKIS
 XI 4 - JUSTIN VIERI\tOSN BIOLOGI
 XI 4 - KEYSHA EVANGELINE MOY\tVOLLY
-XI 4 - LEONERD NATANAEL JUNPI\tOSN KIMIA
+XI 4 - LEONERD NATANAEL JUNPI\tOSN KIMIA (Senin)
 XI 4 - MARIE GABRIELLA REGITHA CAYA SAPUTRA\tPRAMUKA MINAT
 XI 4 - NATHANIA VERLYN GUNAWAN\tPMR
 XI 4 - NI PUTU AYU WIDIYA MAHARANI\tPRAMUKA MINAT
@@ -778,28 +609,28 @@ XII 4 - ADELINE SEPTIANI SUGIARTO\tTEATER
 XII 4 - ALFREDO GAVRIEL PRIYANTO\tBULUTANGKIS
 XII 4 - ALZELLO AURELIO SALIM\tFUTSAL
 XII 4 - ANGELA RIEVA KRISTIANI\tJURNALISTIK
-XII 4 - AURELL CRISTA GUNAWAN\tOSN KIMIA
+XII 4 - AURELL CRISTA GUNAWAN\tOSN KIMIA (Rabu)
 XII 4 - AURORA VINAYA IDRIS\tOSN MATEMATIKA
-XII 4 - CAITLIN NATASHA\tOSN KIMIA
+XII 4 - CAITLIN NATASHA\tOSN KIMIA (Rabu)
 XII 4 - CECILIA SLAVINA HARYANTO\tJURNALISTIK
-XII 4 - CHITAMA LOIS CHRISANDI\tOSN KIMIA
+XII 4 - CHITAMA LOIS CHRISANDI\tOSN KIMIA (Rabu)
 XII 4 - CHRISTANTI RUTH RAVIOLA HUTAHAEAN\tBULUTANGKIS
 XII 4 - DEVINA WIYANI CAHYADI\tTATA BOGA
 XII 4 - EARLY GIVELLA CLYALINNZIE ASALWI\tTEATER
 XII 4 - FELICIA GIOVANNI STEVEN\tTATA BOGA
-XII 4 - GABRIELA INTAN KANAYA\tOSN KIMIA
-XII 4 - GABY GISELA TAMBUNAN\tOSN KIMIA
+XII 4 - GABRIELA INTAN KANAYA\tOSN KIMIA (Rabu)
+XII 4 - GABY GISELA TAMBUNAN\tOSN KIMIA (Rabu)
 XII 4 - GRACE PATRICIA. S.\tPMR
-XII 4 - HAGAI TANUSAPUTRA\tOSN KIMIA
-XII 4 - HUGO GOEI TJWAN HONG\tOSN KIMIA
+XII 4 - HAGAI TANUSAPUTRA\tOSN KIMIA (Rabu)
+XII 4 - HUGO GOEI TJWAN HONG\tOSN KIMIA (Rabu)
 XII 4 - IRENE DEA BENITA\tTARI TRADISIONAL
 XII 4 - JENNIFER ALBERTA WONG\tBULUTANGKIS
 XII 4 - MARIA MARSEILA VIENNY\tTATA RIAS
 XII 4 - MAUREEN ANGELICA\tTATA BOGA
 XII 4 - NATHASYA GABRIELA INDRA JAYA\tOSN EKONOMI
-XII 4 - PANJI MUHAMMAD\tOSN KIMIA
+XII 4 - PANJI MUHAMMAD\tOSN KIMIA (Rabu)
 XII 4 - REGITA AMELIA WINARTA\tBULUTANGKIS
-XII 4 - ROBBY HUTAMA SETIAWAN\tOSN KIMIA
+XII 4 - ROBBY HUTAMA SETIAWAN\tOSN KIMIA (Rabu)
 XII 4 - SHEREEN VIOLINA\tBULUTANGKIS
 XII 4 - STANISLAUS NAKULA TWINALDO WIDYASWARA\tBULUTANGKIS
 XII 4 - STANLEY NICHOLAS\tBULUTANGKIS
@@ -813,7 +644,7 @@ XII 5 - AMRITA ZAHRAH SABIL\tPRAMUKA MINAT
 XII 5 - ANASTASIA CHRISTINA\tSENI RUPA (Selasa)
 XII 5 - ANDREW BENJAMIN GUNTORO\tBASKET
 XII 5 - CAROLINE ANNABEL\tJURNALISTIK
-XII 5 - CHRISTIAN ELKANA SIREGAR\tOSN KIMIA
+XII 5 - CHRISTIAN ELKANA SIREGAR\tOSN KIMIA (Rabu)
 XII 5 - DARREN DESTEFANO\t---
 XII 5 - ELXINVY CAITLYN GUNAWAN\tOSN BIOLOGI
 XII 5 - FELICIA KAREN WIJAYA\tPMR
@@ -825,12 +656,12 @@ XII 5 - HANS CHRISTIAN HENCO\tTATA BOGA
 XII 5 - JESSICA ANANTA SHARON SINAGA\tPMR
 XII 5 - JESSICA LILYANA WIJAYA\tPRAMUKA MINAT
 XII 5 - JESSLYN ORIBEL\tFOTOGRAFI
-XII 5 - JOANNA JESSECA EMMANUELA\tOSN KIMIA
+XII 5 - JOANNA JESSECA EMMANUELA\tOSN KIMIA (Rabu)
 XII 5 - JONATHAN JOSHUA\tTAEKWONDO
 XII 5 - LAVENIA AVILA SUTIONO\tTAEKWONDO
 XII 5 - LIORA\tTATA BOGA
 XII 5 - MARCELLINUS CATUR PUTRA KURNIAGUNG\tPRAMUKA MINAT
-XII 5 - MARTINUS GLENN HENDRIK\tOSN KIMIA
+XII 5 - MARTINUS GLENN HENDRIK\tOSN KIMIA (Rabu)
 XII 5 - MIKHAELLA CINTA PUTRANATA\tTEATER
 XII 5 - MONIKA AGRETA PRATMANA PUTRI\tPRAMUKA MINAT
 XII 5 - NATHANIA ARIELLA TOGIANA SIREGAR\tENGLISH CLUB
@@ -839,8 +670,8 @@ XII 5 - NIKITA ARDINE\tPMR
 XII 5 - ROSA VIRGINIA THIRDETA KARINA\tVOLLY
 XII 5 - SALMAA INDRAWARDHANI\tFOTOGRAFI
 XII 5 - SAMUEL CHRISTIAN SURYA\tTATA BOGA
-XII 5 - SHANIA CHITRA THENG\tOSN KIMIA
-XII 5 - SHEREN REVANIYA SITOHANG\tOSN KIMIA
+XII 5 - SHANIA CHITRA THENG\tOSN KIMIA (Rabu)
+XII 5 - SHEREN REVANIYA SITOHANG\tOSN KIMIA (Rabu)
 XII 5 - STEFANUS SADEWA TWINALDI WIDYASWARA\tTATA BOGA
 XII 5 - VANESSA HOSEA\tBULUTANGKIS
 XII 6 - AGUSTINUS REVANDO\tVOLLY
@@ -912,165 +743,3 @@ XII 7 - STEVEN\tFUTSAL
 XII 7 - THALIA ALEXA EVANGELINE\tTATA RIAS
 XII 7 - VERONICA ADELINA W\tBULUTANGKIS
 XII 7 - VINSENTIUS ROBET DANUARTA\tPRAMUKA MINAT
-`.trim().split('\n');
-
-    const teachers = {
-        "BU RIA & BU EVA":[],
-"BU NELLY":[],
-"BU AYU":[],
-"BU ENDANG & PAK TEGUH":[],
-"PAK LAMIRAN":[],
-"PAK DONI & PAK IVAN":[],
-"BU IMEL & BU OLIV":[],
-"BU GESTA":[],
-"BU ARY & BU PENI":[],
-"MR.KRIS":[],
-"BU MAUREN & BU DINDA":[],
-"PAK ADDY":[],
-"BU DEWI, BU DEVI, & PAK UUT":[],
-"PAK NICO, BU OCA, PAK JACK":[],
-"PAK FERDI":[],
-"PAK NICO":[],
-"PAK YO, PAK THADEUS, & PAK JACK":[],
-"PAK THEO":[],
-"PAK LUYA, PAK JHON, & BU TATA":[],
-"BU LINA":[],
-"BU DEWI ASTI & BU ROSA":[],
-"MS. CLARA & MS. WULAN":[],
-"BU SILDAM":[],
-"PAK THADEUS":[],
-"PAK ANDI & PAK BAMBANG":[],
-"BU WIDIT":[],
-"BU WIWID, BU SEPTI, & BU PUJI":[]
-};
-
-const students = {};
-
-    data.forEach(line => {
-        const [name, activity] = line.split('\t');
-        if (teachers.hasOwnProperty(name)) {
-            teachers[name].push(activity);
-        } else {
-            if (!students[activity]) {
-                students[activity] = [];
-            }
-            students[activity].push(name);
-        }
-    });
-
-    for (const teacher in teachers) {
-        const option = document.createElement('option');
-        option.value = teacher;
-        option.textContent = teacher;
-        teacherSelect.appendChild(option);
-    }
-
-    teacherSelect.addEventListener('change', function () {
-        const selectedTeacher = this.value;
-        if (selectedTeacher) {
-            activitySelect.innerHTML = '<option value="">--Please choose an option--</option>';
-
-            teachers[selectedTeacher].forEach(activity => {
-                const option = document.createElement('option');
-                option.value = activity;
-                option.textContent = activity;
-                activitySelect.appendChild(option);
-            });
-
-            activitySection.style.display = 'block';
-            studentSection.style.display = 'none';
-        } else {
-            activitySection.style.display = 'none';
-            studentSection.style.display = 'none';
-        }
-    });
-
-    activitySelect.addEventListener('change', function () {
-        const selectedActivity = this.value;
-        if (selectedActivity) {
-            activityName.textContent = selectedActivity;
-            studentList.innerHTML = '';
-
-            if (students[selectedActivity]) {
-                students[selectedActivity].forEach(student => {
-                    const li = document.createElement('li');
-                    li.textContent = student;
-
-                    const checklist = document.createElement('div');
-                    checklist.className = 'checklist';
-
-                    const statuses = ['Present', 'Ijin', 'Sakit', 'Alpha'];
-                    statuses.forEach(status => {
-                        const label = document.createElement('label');
-                        const checkbox = document.createElement('input');
-                        checkbox.type = 'radio';
-                        checkbox.name = `attendance-${student}`;
-                        checkbox.value = status;
-                        label.appendChild(checkbox);
-                        label.appendChild(document.createTextNode(status));
-                        checklist.appendChild(label);
-                    });
-
-                    li.appendChild(checklist);
-                    studentList.appendChild(li);
-                });
-            }
-
-            studentSection.style.display = 'block';
-        } else {
-            studentSection.style.display = 'none';
-        }
-    });
-
-    submitButton.addEventListener('click', function () {
-        const selectedActivity = activitySelect.value;
-        if (!selectedActivity) return;
-
-        // Adjusting for GMT+7 timezone
-        const now = new Date();
-        const gmt7Offset = 7 * 60; // GMT+7 offset in minutes
-        const localTime = new Date(now.getTime() + gmt7Offset * 60000);
-        const timestamp = localTime.toISOString().slice(0, 19).replace('T', ' ');
-
-        let csvContent = 'data:text/csv;charset=utf-8,';
-        csvContent += `Timestamp,${timestamp}\n`;
-        csvContent += `Activity,${selectedActivity}\n\n`;
-        csvContent += 'Student,Status\n';
-
-        students[selectedActivity].forEach(student => {
-            const status = document.querySelector(`input[name="attendance-${student}"]:checked`);
-            const statusValue = status ? status.value : 'Not Selected';
-            csvContent += `${student},${statusValue}\n`;
-        });
-
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement('a');
-        link.setAttribute('href', encodedUri);
-        link.setAttribute('download', `attendance_${selectedActivity}_${timestamp.replace(/:/g, '-')}.csv`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
-        // Clear selections
-        teacherSelect.value = '';
-        activitySelect.innerHTML = '<option value="">--Please choose an option--</option>';
-        activitySection.style.display = 'none';
-        studentSection.style.display = 'none';
-        activityName.textContent = '';
-        studentList.innerHTML = '';
-
-        // Show popup message
-        alert("PRESENSI TERSIMPAN!");
-    });
-
-    checkAllPresentButton.addEventListener('click', function () {
-        const studentCheckboxes = document.querySelectorAll('input[type="radio"][value="Present"]');
-        studentCheckboxes.forEach(checkbox => {
-            checkbox.checked = true;
-        });
-    });
-});
-
-    </script>
-</body>
-</html>
